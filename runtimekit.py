@@ -132,6 +132,7 @@ with open(filename,"r") as f:
             cnt=0
             for i in v2:
                 cnt+=code.count(i)
+            print(var_list[cnt])
         if casting in code:
             try:
                 var_list[cnt]=int(var_list[cnt])
