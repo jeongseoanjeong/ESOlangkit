@@ -83,6 +83,10 @@ with open(filename,"r") as f:
         print(SEerror)
         sys.exit(-1)
     while li<len(command_list):
+        error-=1
+        if error<0:
+            print(inflooperr)
+            sys.exit(3)
         cnt=0
         result=False
         code=command_list[li]
@@ -128,7 +132,6 @@ with open(filename,"r") as f:
             cnt=0
             for i in v2:
                 cnt+=code.count(i)
-            print(var_list[cnt])
         if casting in code:
             try:
                 var_list[cnt]=int(var_list[cnt])
@@ -169,7 +172,3 @@ with open(filename,"r") as f:
                     cnt=var_list[cnt]
                 print(exitmsg[0]+str(cnt)+exitmsg[1])
                 sys.exit(0)
-        error-=1
-        if error<0:
-            print(inflooperr)
-            sys.exit(3)
