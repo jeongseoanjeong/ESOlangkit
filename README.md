@@ -49,14 +49,17 @@ imagine code is any line of script.
   * but if input is string, this will be error.
 18. casting:string
   * if code includes casting's value, variable's type will be switched int to char or char to int by using ASCII code 
+19. error:integer
+  * default setting is 10000, but you can increase or decrease this value.
 ## error messages
 1. fileexterror:String 
-  * if extensions of file is not correct,then this error will be emerged.
-2. SEError:string
-  * if code is not starts with variable "start" or not ends with variable "end",then this error will be emerged.
+  * if extensions of file is not correct,then this error will be thrown.
+2. SEError:strin
+  * if code is not starts with variable "start" or not ends with variable "end",then this error will be thrown.
 3. strerror:string
-  * this runtime only handles char and integer variables. but type of variable is string,then this error will be emerged.
-
+  * this runtime only handles char and integer variables. but type of variable is string,then this error will be thrown.
+4. inflooperr:string
+  * if program loops over (error's value) times then this error will be thrown
 # Examples:
   ```python
 ###########
