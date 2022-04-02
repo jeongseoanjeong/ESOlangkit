@@ -60,6 +60,10 @@ inputvar=""
 strerror=""
 #형변환구문
 casting=""
+#무한루프 기준값
+error=10000
+#무한루프시 오류메시지
+inflooperr=""
 #시스템 인수 읽기
 for j in range(len(sys.argv)):
     if fileext in sys.argv[j]:
@@ -90,22 +94,25 @@ with open(filename,"r") as f:
                     break
                 else:
                     var_list.append(0)
-            if str(var_list[cnt]).isdigit():
+            try:
+                var_list[cnt]=int(var_list[cnt])
                 if not mul in code:
                     var_list[cnt]+=code.count(add)-code.count(sub)
                 else:
                     l,r=code.split(mul)
                     var_list[cnt]+=(l.count(add)-l.count(sub))*(r.count(add)-r.count(sub))
-            else:
-                var_list[cnt]=chr(ord(var_list[cnt])+code.count(add)-code.count(sub))
-            
+            except ValueError:
+                a=ord(var_list[cnt])+code.count(add)-code.count(sub)
+                if a>0:
+                    var_list[cnt]=chr(a)
+            li+=1
         if ifvar in code:
             l_,r_=code.split(ifvar)
             c_l=0
             c_r=0
             for i in v2:
-                c_l+=l.count(i)
-                c_r+=l.count(i)
+                c_l+=l_.count(i)
+                c_r+=r_.count(i)
             l=var_list[c_l]
             r=var_list[c_r]
             if l==r and eqvar in code:
@@ -115,21 +122,26 @@ with open(filename,"r") as f:
             elif not (notvar in code or eqvar in code ):
                 print(iferror)
                 sys.exit(2)
+            if not result:
+                li+=1
         if printvar in code:
+            cnt=0
             for i in v2:
                 cnt+=code.count(i)
             print(var_list[cnt])
         if casting in code:
-            if str(var_list[cnt]).isdigit():
-                var_list[cnt]=chr(var_list[cnt])
-            else:
+            try:
+                var_list[cnt]=int(var_list[cnt])
+                if var_list[cnt]>0:
+                    var_list[cnt]=chr(var_list[cnt])
+            except ValueError:
                 var_list[cnt]=ord(var_list[cnt])
         if inputvar in code:
             a=input()
             b=0
             for i in v2:
                 cnt+=code.count(i)
-            if a.isdigit():
+            if a.isnumeric():
                 b=int(a)
             elif len(a)==1:
                 b=a
@@ -137,24 +149,27 @@ with open(filename,"r") as f:
                 print(strerror)
                 sys.exit(3)
             var_list[cnt]=b
+            li+=1
         if result:
             if jmp in code:
+                code=code.split(jmp)[1]
                 cnt=code.count(add)-code.count(sub)
                 if cnt==0:
                     for i in v2:
                         cnt+=code.count(i)
                     cnt=var_list[cnt]
+                    li=cnt
                 else:
-                    i=cnt
+                    li=cnt
             if ret in code:
                 cnt=code.count(add)-code.count(sub)
                 if cnt==0:
                     for i in v2:
                         cnt+=code.count(i)
                     cnt=var_list[cnt]
-                else:
-                    i=cnt
                 print(exitmsg[0]+str(cnt)+exitmsg[1])
                 sys.exit(0)
-        li+=1
-                
+        error-=1
+        if error<0:
+            print(inflooperr)
+            sys.exit(3)
