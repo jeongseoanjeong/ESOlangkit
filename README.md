@@ -51,6 +51,16 @@ imagine code is any line of script.
   * if code includes casting's value, variable's type will be switched int to char or char to int by using ASCII code 
 19. error:integer
   * default setting is 10000, but you can increase or decrease this value.
+20. arrayvar:string
+  * defines array if this value includes in a code.
+21. arraypointer:string
+  * points into array(a.k.a [] in array)if this value includes in a code.
+22. EOA:string
+  * end of array if this value includes in a code. it is import to use this value to end of array.
+23. concat:string
+  * concats values to array if this value includes in a code
+24. remove:string
+  * removes values to array if this value includes in a code. if you don't specify points, this removes last value of array.
 ## error messages
 1. fileexterror:String 
   * if extensions of file is not correct,then this error will be thrown.
@@ -60,6 +70,10 @@ imagine code is any line of script.
   * this runtime only handles char and integer variables. but type of variable is string,then this error will be thrown.
 4. inflooperr:string
   * if program loops over (error's value) times then this error will be thrown
+5. removeerror:string
+  * if tries to remove elements when length of array is 0, then this error will thrown.
+6. arraypointingerr:string
+  * if pointing in array don't exists(a.k.a Indexerror), the this error will thrown.
 # Examples:
   ```python
 ###########
