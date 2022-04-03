@@ -68,7 +68,8 @@ inflooperr=""
 #v2 추가내용
 #배열 변수 추가
 #배열 뒤에 무언가를 추가하거나 삭제하는 함수
-array_list=[[0]]
+length=""
+array_list=[[]]
 #배열 선언 문자
 arrayvar=""
 #배열 포인터 구분자
@@ -101,7 +102,9 @@ with open(filename,"r") as f:
     if command_list[0]!=start or command_list[-1]!=end:
         print(SEerror)
         sys.exit(-1)
-    while li<len(command_list):
+    while li<len(command_list):     
+        cnt4=0
+        cnt3=0
         error-=1
         if error<0:
             print(inflooperr)
@@ -113,13 +116,27 @@ with open(filename,"r") as f:
             cnt+=code.count(i)
         if arrayvar in code:
             try:
-                while True:
-                    if len(array_list)>cnt:
-                        break
-                    else:
-                        array_list.append([0])
-                cnt2=code.count(add)-code.count(sub)
-                cnt4=0
+                if not arraypointer in code:
+                    cnt2=code.count(add)-code.count(sub)
+                    if mul in code:
+                        right2=right.split(mul)
+                        for rr in right2:
+                            cnt2*=rr.count(add)-rr.count(sub)
+                    if concat in code:
+                        array_list[cnt].append(cnt2)
+                    if printvar in code:
+                        print(array_list[cnt])
+                    if length in code:
+                        l,r=code.split(length)
+                        l_=0
+                        r_=0
+                        for i in v2:
+                            l_+=l.count(i)
+                            r_+=r.count(i)
+                        if v1 in code:
+                            var_list[l_]+=len(array_list[r_])
+                    if remove in code:
+                        del array_list[cnt][-1]
                 if arraypointer in code:
                     l,r=code.split(arraypointer)
                     point,right=r.split(EOA)
@@ -134,20 +151,42 @@ with open(filename,"r") as f:
                             cnt3*=rr.count(add)-rr.count(sub)
                     for ii in v2:
                         cnt4+=l.count(ii)
-                    cnt3=point.count(add)-point.count(sub)
+                    while True:
+                        if len(array_list[cnt4])>cnt3:
+                            break
+                        else:
+                            array_list.append([0])
                     if value==0:
                         value+=right.count(add)-right.count(sub)
-                    array_list[cnt4][cnt3]+=value
-                if remove in code:
-                    del array_list[cnt][cnt2]
-                elif concat in code:
-                    array_list.append(cnt2)
+                    array_list[cnt][cnt3]+=value
+                    if remove in right:
+                        del array_list[cnt][cnt3]
+                    if printvar in code:
+                        cnt3=point.count(add)-point.count(sub)
+                        print(array_list[cnt][cnt3])
+                    if casting in code:
+                        try:
+                            array_list[cnt][cnt3]=int(array_list[cnt][cnt3])
+                            if array_list[cnt]>0:
+                                array_list[cnt][cnt3]=chr(array_list[cnt][cnt3])
+                        except ValueError:
+                            array_list[cnt][cnt3]=ord(array_list[cnt][cnt3])
+                    elif inputvar in code:
+                        a=input()
+                        b=0
+                        for i in v2:
+                            cnt+=code.count(i)
+                        if a.isnumeric():
+                            b=int(a)
+                        elif len(a)==1:
+                            b=a
+                        else:
+                            print(strerror)
+                            sys.exit(3)
+                        var_list[cnt4][cnt3]=b
             except ValueError:
                 print(removeerror)
                 sys.exit(-1)
-            except IndexError:
-                print(arraypointingerr)
-                sys.exit(-2)
         if v1 in code:
             while True:
                 if len(var_list)>cnt:
@@ -165,7 +204,6 @@ with open(filename,"r") as f:
                 a=ord(var_list[cnt])+code.count(add)-code.count(sub)
                 if a>0:
                     var_list[cnt]=chr(a)
-            li+=1
         if ifvar in code:
             l_,r_=code.split(ifvar)
             c_l=0
@@ -184,10 +222,11 @@ with open(filename,"r") as f:
                 sys.exit(2)
             if not result:
                 li+=1
-        if printvar in code:
+        if printvar in code and not arrayvar in code:
             cnt=0
             for i in v2:
                 cnt+=code.count(i)
+            print(var_list[cnt])
         if casting in code:
             try:
                 var_list[cnt]=int(var_list[cnt])
@@ -195,7 +234,7 @@ with open(filename,"r") as f:
                     var_list[cnt]=chr(var_list[cnt])
             except ValueError:
                 var_list[cnt]=ord(var_list[cnt])
-        if inputvar in code:
+        if inputvar in code and not arrayvar in code:
             a=input()
             b=0
             for i in v2:
@@ -208,7 +247,6 @@ with open(filename,"r") as f:
                 print(strerror)
                 sys.exit(3)
             var_list[cnt]=b
-            li+=1
         if result:
             if jmp in code:
                 code=code.split(jmp)[1]
@@ -228,3 +266,4 @@ with open(filename,"r") as f:
                     cnt=var_list[cnt]
                 print(exitmsg[0]+str(cnt)+exitmsg[1])
                 sys.exit(0)
+        li+=1
