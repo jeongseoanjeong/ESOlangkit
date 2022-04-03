@@ -64,6 +64,25 @@ casting=""
 error=10000
 #무한루프시 오류메시지
 inflooperr=""
+#####################
+#v2 추가내용
+#배열 변수 추가
+#배열 뒤에 무언가를 추가하거나 삭제하는 함수
+array_list=[[0]]
+#배열 선언 문자
+arrayvar=""
+#배열 포인터 구분자
+arraypointer=""
+#배열 끝 구분자(자료 대입용)
+EOA=""
+#배열 원소 추가
+concat=""
+#배열 원소 제거
+remove=""
+#배열원소 제거 시 에러메시지(배열 길이가지충분하지 않을 때)
+removeerror=""
+#배열 원소 포인팅 에러
+arraypointingerr=""
 #시스템 인수 읽기
 for j in range(len(sys.argv)):
     if fileext in sys.argv[j]:
@@ -92,6 +111,43 @@ with open(filename,"r") as f:
         code=command_list[li]
         for i in v2:
             cnt+=code.count(i)
+        if arrayvar in code:
+            try:
+                while True:
+                    if len(array_list)>cnt:
+                        break
+                    else:
+                        array_list.append([0])
+                cnt2=code.count(add)-code.count(sub)
+                cnt4=0
+                if arraypointer in code:
+                    l,r=code.split(arraypointer)
+                    point,right=r.split(EOA)
+                    value=0
+                    if mul in right:
+                        right2=right.split(mul)
+                        for rr in right2:
+                            value*=rr.count(add)-rr.count(sub)
+                    if mul in point:
+                        point2=point.split(mul)
+                        for rr in point2:
+                            cnt3*=rr.count(add)-rr.count(sub)
+                    for ii in v2:
+                        cnt4+=l.count(ii)
+                    cnt3=point.count(add)-point.count(sub)
+                    if value==0:
+                        value+=right.count(add)-right.count(sub)
+                    array_list[cnt4][cnt3]+=value
+                if remove in code:
+                    del array_list[cnt][cnt2]
+                elif concat in code:
+                    array_list.append(cnt2)
+            except ValueError:
+                print(removeerror)
+                sys.exit(-1)
+            except IndexError:
+                print(arraypointingerr)
+                sys.exit(-2)
         if v1 in code:
             while True:
                 if len(var_list)>cnt:
@@ -132,7 +188,6 @@ with open(filename,"r") as f:
             cnt=0
             for i in v2:
                 cnt+=code.count(i)
-            print(var_list[cnt])
         if casting in code:
             try:
                 var_list[cnt]=int(var_list[cnt])
